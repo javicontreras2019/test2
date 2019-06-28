@@ -6,6 +6,8 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "pstat.h"
+
 
 struct {
   struct spinlock lock;
@@ -88,7 +90,13 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-
+  pstat.inuse[p-ptable.proc] = 1;
+  pstat.pid[p-ptable.proc] = p->pid;
+  pstat.name[p-ptable.proc][0]=p->name[0];
+    pstat.name[p-ptable.proc][1]=p->name[1];
+      pstat.name[p-ptable.proc][2]=p->name[2];
+  pstat.hticks[p-ptable.proc] = 0;
+  pstat.lticks[p-ptable.proc] = 0;
   release(&ptable.lock);
 
   // Allocate kernel stack.
