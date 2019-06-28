@@ -1,0 +1,14 @@
+language: c
+script: make && make fs.img
+deploy:
+  provider: releases
+  api_key:
+    secure: Y6sf5j6/uObNzBK1dBbX3XJ5RidGd91B+ZzoPfI8QP1Am9632WPI5AJhU3zu77UjUY9Yao07kwdiL3vPvtnPIjFLjeV/OwXTxGlfHbPf2kuWWxmnlEiOlEG36wlAXjZ3TDKWssCr2MoAQOSV9hFGf8YwC5iNxhjtqLrG5I+FHO5yG+NJQCIruDq5w7FJ0UQMfKhJbKtEjWVPCRr3+bWLxmnaVl16lsFn+owmnxPlyrPi+KEjfxBWCk4GQSmW+NKmggV8tLMwvbkny5WvIaH3DG8FKgF8dS6b8d6R1jDq9s8dOlrjasUwrNjTmk6TIj44g46zJvXA+z5DemLrEgI/j4dxQgMa8SM/cx+BYke4IuSpTIbaDcHozIMKgPMHYB+f9jN62hkM19EKwKrSeAOZ7VFR4eJDEH1mGdLK+zpABxhpOZLHmcILEsAOhZus3ybSzO9YSzmgM44flJCJblEfOxIwKovNAFUMBqjggciuC4P5CNpBUV+voGoc3obhpLugf2h08oT2AAJgs9dfU/cjsSnu8S/S6mUi2VfkB+F/ONc4KIUPRugOb/QzbEpbL5Jy8ZiZHj0SLycwA6rH0csrkrUJRN7nhgF59Rwkom7MzkDtODuPliagwmb/3s1ESh9oRYHLF/YrYAGMfU+n6Wbxu0XRNlPe3+B2feOxlhMsrq0=
+  file: 
+    -fs.img
+    -xv6.img
+  skip_cleanup: true
+  on:
+    repo: javicontreras2019/test2
+    branch: project_1
+    tags: true
