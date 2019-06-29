@@ -6,7 +6,9 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "rand.h"
 #include "pstat.h"
+#include "sysproc.c"
 
 
 struct {
@@ -88,6 +90,7 @@ allocproc(void)
   return 0;
 
 found:
+  p->tickets = 10;
   p->state = EMBRYO;
   p->pid = nextpid++;
   pstat.inuse[p-ptable.proc] = 1;
@@ -327,6 +330,8 @@ wait(void)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
+ 
+
 void
 scheduler(void)
 {
