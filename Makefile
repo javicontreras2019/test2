@@ -1,6 +1,5 @@
 OBJS = \
 	bio.o\
-	rand.o\
 	console.o\
 	exec.o\
 	file.o\
@@ -168,6 +167,7 @@ mkfs: mkfs.c fs.h
 
 UPROGS=\
 	_listPid.c\
+	_rand.o\
 	_cat\
 	_echo\
 	_forktest\

@@ -126,6 +126,20 @@ found:
   return p;
 }
 
+int lottery_Total(void){
+  struct proc *p;
+ int ticket_aggregate=0;
+
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if(p->state==RUNNABLE){
+      ticket_aggregate+=p->tickets;
+    }
+  }
+  return ticket_aggregate;          
+}
+
 //PAGEBREAK: 32
 // Set up first user process.
 void
@@ -338,6 +352,9 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
+  int count = 0;
+  long golden_ticket = 0;
+  int total_no_tickets = 0;
   
   for(;;){
     // Enable interrupts on this processor.
@@ -345,9 +362,26 @@ scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+    
+    golden_ticket = 0;
+    count = 0;
+    total_no_tickets = 0;
+    
+     
+    
+    total_no_tickets = lottery_Total();
+
+    
+    golden_ticket = random_at_most(total_no_tickets);
+
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
+        //find the process which holds the lottery winning ticket 
+      if ((count + p->tickets) < golden_ticket){
+        count += p->tickets;
+        continue;
+      }
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
@@ -362,6 +396,7 @@ scheduler(void)
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
+      break;
     }
     release(&ptable.lock);
 
@@ -536,7 +571,7 @@ procdump(void)
       state = states[p->state];
     else
       state = "???";
-    cprintf("%d %s %s", p->pid, state, p->name);
+    cprintf("%d %s %sc%d", p->pid, state, p->name, p->tickets);
     if(p->state == SLEEPING){
       getcallerpcs((uint*)p->context->ebp+2, pc);
       for(i=0; i<10 && pc[i] != 0; i++)
